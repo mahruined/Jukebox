@@ -1,0 +1,207 @@
+/* General styles */
+body {
+  background-color: #121212;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Genre Page Container */
+.genre-page {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background: #1e1e1e;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  color: #ff69b4;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 10px;
+  margin: 5px 0;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.sidebar li:hover {
+  background: rgba(255, 105, 180, 0.2);
+  border-radius: 5px;
+}
+
+/* Main Content */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+h1 {
+  color: #ff69b4;
+}
+
+/* Song List */
+.song-list {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.song-list-header {
+  display: flex;
+  padding: 10px;
+  font-weight: bold;
+  background: #1e1e1e;
+  color: #ff69b4;
+  border-bottom: 2px solid #ff69b4;
+}
+
+.song-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  position: relative; /* Needed for positioning play button */
+  transition: background 0.3s;
+}
+
+.song-item:hover {
+  background: rgba(255, 105, 180, 0.2);
+  border-radius: 5px;
+}
+
+.song-cover {
+  width: 50px; /* Adjust the size as needed */
+  height: 50px;
+  border-radius: 5px; /* Optional rounded corners */
+  object-fit: cover;
+  margin-right: 10px; /* Space between image and text */
+}
+
+.song-title {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.song-artist {
+  font-size: 14px;
+  color: #777;
+}
+
+.song-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background-color: rgba(255, 105, 180, 0.8);
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none; /* Hidden by default */
+}
+
+.song-item:hover .play-button {
+  display: block; /* Show play button on hover */
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: black;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Footer Song Cover */
+.footer-cover {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+/* Footer Song Info */
+.current-song-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Controls */
+.playback-controls {
+  display: flex;
+  gap: 15px;
+}
+
+button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+button:hover {
+  color: pink;
+}
+
+/* Progress Bar */
+.song-progress {
+  display: flex;
+  align-items: center;
+  width: 40%;
+}
+
+.progress-bar {
+  flex-grow: 1;
+  height: 8px;
+  appearance: none;
+  background: white;
+  border-radius: 5px;
+  outline: none;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: pink;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Volume Slider */
+.volume-control {
+  display: flex;
+  align-items: center;
+}
+
+.volume-slider {
+  width: 100px;
+}
