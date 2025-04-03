@@ -70,7 +70,9 @@ h1 {
   color: #ff69b4;
   border-bottom: 2px solid #ff69b4;
 }
-
+.artist-image{
+  size: 50%;
+}
 .song-item {
   display: flex;
   align-items: center;
