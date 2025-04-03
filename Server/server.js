@@ -1,9 +1,9 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+const songsRoutes = require('./Routes/songsRoute');
 const genresRoutes = require('./Routes/GenresRoute');
-const testRoutes = require('./Routes/TestRoute');
-
+const artistRoutes = require('./Routes/artistsroute');  // Correct import here
 const app = express();
 const port = 3000;
 
@@ -13,8 +13,6 @@ app.use(express.json());
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));  // All static files in the "public" folder will be served.
-
-app.use('/images', express.static('images'));  // Serve images from the "images" folder
 
 // MySQL connection setup
 const db = mysql.createConnection({
@@ -35,8 +33,11 @@ db.connect((err) => {
 // Use the genresRoutes for the /api/genres endpoint
 app.use('/api/genres', genresRoutes(db));
 
-// Use the testRoutes for the /api/test endpoint
-app.use('/api/test', testRoutes(db)); 
+// Use the songsRoute for the /api/songs endpoint
+app.use('/api/songs', songsRoutes(db));
+
+// Use the artistRoutes for the /api/artists endpoint
+app.use('/api/artists', artistRoutes(db));
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
