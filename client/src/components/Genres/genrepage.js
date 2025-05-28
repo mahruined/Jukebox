@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // <-- import Link here
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaPlay, FaPause, FaStepBackward, FaStepForward } from 'react-icons/fa';
 import './Style/genrepage.css';
@@ -17,12 +17,16 @@ const GenrePage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
+    console.log(`[GenrePage] useParams id: ${id}`);  // <--- ADD THIS
     axios.get(`http://localhost:3000/api/songs/${id}`)
       .then((response) => {
+        console.log('[GenrePage] Fetched response:', response);
+        console.log('[GenrePage] Fetched songs data:', response.data);
         setSongs(response.data);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error('[GenrePage] Failed to fetch songs:', err);
         setError('Failed to fetch songs');
         setLoading(false);
       });
@@ -32,14 +36,20 @@ const GenrePage = () => {
     if (player) {
       player.pause();
     }
+    console.log(`[GenrePage] Playing song: ${song.title}`);
     const newPlayer = new Audio(song.file_path);
-    
-    newPlayer.onloadedmetadata = () => setDuration(newPlayer.duration);
-    newPlayer.ontimeupdate = () => setCurrentTime(newPlayer.currentTime);
+
+    newPlayer.onloadedmetadata = () => {
+      console.log(`[GenrePage] Song duration loaded: ${newPlayer.duration}`);
+      setDuration(newPlayer.duration);
+    };
+    newPlayer.ontimeupdate = () => {
+      setCurrentTime(newPlayer.currentTime);
+    };
 
     newPlayer.volume = volume;
     newPlayer.play();
-    
+
     setPlayer(newPlayer);
     setCurrentSong(song);
     setIsPlaying(true);
@@ -47,6 +57,7 @@ const GenrePage = () => {
 
   const handlePause = () => {
     if (player) {
+      console.log(`[GenrePage] Pausing song: ${currentSong?.title}`);
       player.pause();
       setIsPlaying(false);
     }
@@ -57,6 +68,7 @@ const GenrePage = () => {
       if (isPlaying) {
         handlePause();
       } else {
+        console.log(`[GenrePage] Resuming song: ${currentSong?.title}`);
         player.play();
         setIsPlaying(true);
       }
@@ -67,6 +79,7 @@ const GenrePage = () => {
     if (!currentSong) return;
     const currentIndex = songs.findIndex(song => song.file_path === currentSong.file_path);
     const nextIndex = (currentIndex + 1) % songs.length;
+    console.log(`[GenrePage] Playing next song: ${songs[nextIndex].title}`);
     handlePlay(songs[nextIndex]);
   };
 
@@ -74,11 +87,13 @@ const GenrePage = () => {
     if (!currentSong) return;
     const currentIndex = songs.findIndex(song => song.file_path === currentSong.file_path);
     const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
+    console.log(`[GenrePage] Playing previous song: ${songs[prevIndex].title}`);
     handlePlay(songs[prevIndex]);
   };
 
   const handleVolumeChange = (event) => {
     const newVolume = parseFloat(event.target.value);
+    console.log(`[GenrePage] Volume changed to: ${newVolume}`);
     setVolume(newVolume);
     if (player) {
       player.volume = newVolume;
@@ -111,12 +126,10 @@ const GenrePage = () => {
               <img src={song.image} alt={song.title} className="song-cover" />
               <div className="song-info">
                 <span className="song-title">{song.title}</span>
-                {/* Artist name is now a clickable link */}
                 <Link to={`/artist/${song.artist}`} className="song-artist">
                   {song.artist}
                 </Link>
               </div>
-              {/* Play button that appears on hover */}
               <div 
                 className="play-button" 
                 onClick={() => handlePlay(song)}
@@ -129,7 +142,6 @@ const GenrePage = () => {
       </main>
       {currentSong && (
         <footer className="footer">
-          {/* Song Cover & Info */}
           <div className="current-song-info">
             <img src={currentSong.image} alt={currentSong.title} className="footer-cover" />
             <div>
@@ -137,8 +149,6 @@ const GenrePage = () => {
               <p className="artist">{currentSong.artist}</p>
             </div>
           </div>
-
-          {/* Playback Controls */}
           <div className="playback-controls">
             <button onClick={handlePrevious}><FaStepBackward /></button>
             <button onClick={togglePlayPause}>
@@ -146,8 +156,6 @@ const GenrePage = () => {
             </button>
             <button onClick={handleNext}><FaStepForward /></button>
           </div>
-
-          {/* Song Progress */}
           <div className="song-progress">
             <span>{formatTime(currentTime)}</span>
             <input 
@@ -160,8 +168,6 @@ const GenrePage = () => {
             />
             <span>{formatTime(duration)}</span>
           </div>
-
-          {/* Volume Slider */}
           <div className="volume-control">
             <input 
               type="range" 

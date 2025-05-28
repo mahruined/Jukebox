@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./Style/artistpage.css";
-import artistDescriptions from "../artistinfo/artistinfo.js";
 
 const ArtistPage = () => {
   const { artistName } = useParams(); // Get artist name from URL
@@ -15,24 +14,22 @@ const ArtistPage = () => {
     console.log(`Fetching data for artist: ${artistName}`);
 
     axios.get(`http://localhost:3000/api/artists/${artistName}`)
-      .then((response) => {
-        console.log("Received data from backend:", response.data);
+        .then((response) => {
+          console.log("Received data from backend:", response.data);
 
-        // Ensure the response data is an array of songs
-        if (!Array.isArray(response.data) || response.data.length === 0) {
-          setError("No songs found for this artist.");
+          const { artist, songs } = response.data;
+
+          if (!songs || songs.length === 0) {
+            setError("No songs found for this artist.");
+            setLoading(false);
+            return;
+          }
+
+          setSongs(songs);
+          setArtistDescription(artist.description || "No description available.");
           setLoading(false);
-          return;
-        }
+        })
 
-        setSongs(response.data); // Directly use response.data as songs
-
-        // Set artist description based on the artist name
-        const description = artistDescriptions[artistName] || "No description available.";
-        setArtistDescription(description);
-
-        setLoading(false);
-      })
       .catch((error) => {
         console.error("Error fetching artist data:", error);
         setError("Failed to fetch artist data");
@@ -55,7 +52,7 @@ const ArtistPage = () => {
 
       <div className="artist-description">
         <h3>Artist Description</h3>
-        <p>{artistDescription}</p> {/* Display artist description dynamically */}
+        <p>{artistDescription}</p>
       </div>
 
       <div className="song-list">
