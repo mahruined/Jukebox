@@ -1,6 +1,6 @@
 export default class Playlist {
   constructor() {
-    this.expireAfter = 1000 * 60 * 10; // 10 minutes
+    this.expireAfter = 1000 * 1 * 10; // 1 minuute
     this.initExpiration();
   }
 
@@ -11,16 +11,16 @@ export default class Playlist {
     }
   }
 
-  saveGenreSongs(genre, song) {
-    const key = `genre-${genre.toLowerCase()}`;
-    const current = this.getGenreSongs(genre);
+  saveGenreSongs(genreId, song) {
+    const key = `genre-${genreId}`;
+    const current = this.getGenreSongs(genreId);
     current.push(song);
     sessionStorage.setItem(key, JSON.stringify(current));
     this.setExpiry();
   }
 
-  getGenreSongs(genre) {
-    const key = `genre-${genre.toLowerCase()}`;
+  getGenreSongs(genreId) {
+    const key = `genre-${genreId}`;
     const raw = sessionStorage.getItem(key);
     return raw ? JSON.parse(raw) : [];
   }

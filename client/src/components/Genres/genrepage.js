@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaPlay, FaPause, FaStepBackward, FaStepForward } from 'react-icons/fa';
 import './Style/genrepage.css';
+import Playlist from '../../util/playlist';
+
 
 const GenrePage = () => {
   const { id } = useParams();
@@ -17,20 +19,23 @@ const GenrePage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    console.log(`[GenrePage] useParams id: ${id}`);  // <--- ADD THIS
-    axios.get(`http://localhost:3000/api/songs/${id}`)
-      .then((response) => {
-        console.log('[GenrePage] Fetched response:', response);
-        console.log('[GenrePage] Fetched songs data:', response.data);
-        setSongs(response.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('[GenrePage] Failed to fetch songs:', err);
-        setError('Failed to fetch songs');
-        setLoading(false);
-      });
-  }, [id]);
+  axios.get(`http://localhost:3000/api/songs/${id}`)
+    .then((response) => {
+      const backendSongs = response.data;
+
+      const playlist = new Playlist();
+      const tempSongs = playlist.getGenreSongs(id); // using genre ID
+
+      setSongs([...backendSongs, ...tempSongs]);
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error('[GenrePage] Failed to fetch songs:', err);
+      setError('Failed to fetch songs');
+      setLoading(false);
+    });
+}, [id]);
+
 
   const handlePlay = (song) => {
     if (player) {

@@ -25,7 +25,7 @@ export default function HomePage() {
   const [newSong, setNewSong] = useState({
     title: '',
     image: '',
-    genre: '',
+    genreId: '',
   });
 
   useEffect(() => {
@@ -45,17 +45,21 @@ export default function HomePage() {
   };
 
   const handleAddSong = () => {
-    if (!newSong.title || !newSong.genre) {
-      alert("Title and Genre are required");
-      return;
-    }
+  if (!newSong.title || !newSong.genreId) {
+    alert("Title and Genre are required");
+    return;
+  }
 
-    const playlist = new Playlist();
-    playlist.saveGenreSongs(newSong.genre, newSong);
+  const playlist = new Playlist();
+  playlist.saveGenreSongs(newSong.genreId, newSong);
 
-    alert(`Added "${newSong.title}" to genre "${newSong.genre}"`);
-    setNewSong({ title: '', image: '', genre: '' });
-  };
+  // Find the genre name using the genreId
+  const genreName = genres.find(g => g.id.toString() === newSong.genreId)?.name || 'Unknown Genre';
+
+  alert(`Added "${newSong.title}" to genre "${genreName}"`);
+
+  setNewSong({ title: '', image: '', genreId: '' });
+};
 
   if (loading) {
     return <div className="loading">Loading genres...</div>;
@@ -69,7 +73,6 @@ export default function HomePage() {
     <section className="homepage-container">
       <h1 className="homepage-title">Genres</h1>
 
-      {/* Form to Add a Song to a Genre */}
       <div className="add-song-form">
         <h2>Add New Song to a Genre</h2>
         <input
@@ -86,13 +89,18 @@ export default function HomePage() {
           value={newSong.image}
           onChange={handleInputChange}
         />
-        <input
-          type="text"
-          name="genre"
-          placeholder="Genre Name (must match exactly)"
-          value={newSong.genre}
+        <select
+          name="genreId"
+          value={newSong.genreId}
           onChange={handleInputChange}
-        />
+        >
+          <option value="">Select Genre</option>
+          {genres.map((genre) => (
+            <option key={genre.id} value={genre.id}>
+              {genre.name}
+            </option>
+          ))}
+        </select>
         <button onClick={handleAddSong}>Add to Genre</button>
       </div>
 
